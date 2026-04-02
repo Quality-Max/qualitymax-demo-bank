@@ -1,10 +1,16 @@
 {
   "version": 2,
-  "builds": [
-    { "src": "server.js", "use": "@vercel/node" }
-  ],
-  "routes": [
-    { "src": "/static/(.*)", "dest": "/static/$1" },
-    { "src": "/(.*)", "dest": "/server.js" }
+  "functions": {
+    "api/**/*.js": { "memory": 128 }
+  },
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/handler" },
+    { "source": "/dashboard", "destination": "/views/dashboard.html" },
+    { "source": "/transfer", "destination": "/views/transfer.html" },
+    { "source": "/transactions", "destination": "/views/transactions.html" },
+    { "source": "/settings", "destination": "/views/settings.html" },
+    { "source": "/docs", "destination": "/views/docs.html" },
+    { "source": "/login", "destination": "/views/login.html" },
+    { "source": "/", "destination": "/views/login.html" }
   ]
 }

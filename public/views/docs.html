@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo Bank — API Documentation</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-brand">Demo Bank</div>
+    <div class="nav-links">
+      <a href="/dashboard" data-test="nav-dashboard">Dashboard</a>
+      <a href="/transfer" data-test="nav-transfer">Transfer</a>
+      <a href="/transactions" data-test="nav-transactions">Transactions</a>
+      <a href="/settings" data-test="nav-settings">Settings</a>
+      <a href="/docs" class="active" data-test="nav-docs">API Docs</a>
+    </div>
+  </nav>
+  <div class="container">
+    <h1 class="page-title">API Documentation</h1>
+
+    <div class="card">
+      <h2 style="font-size:18px;font-weight:600;margin-bottom:12px;">Authentication</h2>
+      <p style="margin-bottom:8px;">All API endpoints require session authentication. Login first:</p>
+      <pre style="background:#f5f7fa;padding:16px;border-radius:8px;font-size:13px;overflow-x:auto;">POST /api/login
+Content-Type: application/json
+
+{ "username": "demo", "password": "demo123" }</pre>
+    </div>
+
+    <div class="card">
+      <h2 style="font-size:18px;font-weight:600;margin-bottom:12px;">Endpoints</h2>
+      <table>
+        <thead><tr><th>Method</th><th>Path</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge badge-credit">POST</span></td><td>/api/login</td><td>Authenticate and get session cookie</td></tr>
+          <tr><td><span class="badge badge-credit">POST</span></td><td>/api/logout</td><td>End session</td></tr>
+          <tr><td><span class="badge badge-info">GET</span></td><td>/api/me</td><td>Get current user profile</td></tr>
+          <tr><td><span class="badge badge-debit">PUT</span></td><td>/api/me</td><td>Update user profile</td></tr>
+          <tr><td><span class="badge badge-info">GET</span></td><td>/api/accounts</td><td>List user accounts</td></tr>
+          <tr><td><span class="badge badge-info">GET</span></td><td>/api/accounts/:id</td><td>Get account details</td></tr>
+          <tr><td><span class="badge badge-info">GET</span></td><td>/api/transactions</td><td>List transactions (query: account_id, search)</td></tr>
+          <tr><td><span class="badge badge-credit">POST</span></td><td>/api/transfer</td><td>Transfer money between accounts</td></tr>
+          <tr><td><span class="badge badge-info">GET</span></td><td>/api/admin/users</td><td>List all users (admin only)</td></tr>
+          <tr><td><span class="badge badge-info">GET</span></td><td>/api/health</td><td>Health check</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2 style="font-size:18px;font-weight:600;margin-bottom:12px;">Transfer Example</h2>
+      <pre style="background:#f5f7fa;padding:16px;border-radius:8px;font-size:13px;overflow-x:auto;">POST /api/transfer
+Content-Type: application/json
+Cookie: session=YOUR_SESSION_TOKEN
+
+{
+  "from_account_id": 1,
+  "to_account_id": 2,
+  "amount": 100.00,
+  "description": "Monthly savings"
+}</pre>
+    </div>
+  </div>
+</body>
+</html>

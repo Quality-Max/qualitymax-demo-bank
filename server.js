@@ -95,6 +95,8 @@ function json(res, data, status = 200) {
   res.end(JSON.stringify(data));
 }
 
+const BASE_DIR = __dirname;
+
 function serveFile(res, filePath) {
   const ext = path.extname(filePath);
   const types = { '.html': 'text/html', '.css': 'text/css', '.js': 'application/javascript', '.png': 'image/png', '.svg': 'image/svg+xml' };
@@ -104,6 +106,7 @@ function serveFile(res, filePath) {
     res.end(data);
   });
 }
+
 
 function redirect(res, url) {
   res.writeHead(302, { Location: url });
@@ -317,11 +320,16 @@ const server = http.createServer(async (req, res) => {
   res.end('Not Found');
 });
 
-server.listen(PORT, () => {
-  console.log(`QualityMax Demo Bank running on http://localhost:${PORT}`);
-  console.log('');
-  console.log('Test accounts:');
-  console.log('  demo / demo123  (regular user)');
-  console.log('  admin / admin   (admin user)');
-  console.log('  jane / jane456  (regular user)');
-});
+// Vercel serverless: export the handler, don't listen
+if (process.env.VERCEL) {
+  module.exports = server;
+} else {
+  server.listen(PORT, () => {
+    console.log(`QualityMax Demo Bank running on http://localhost:${PORT}`);
+    console.log('');
+    console.log('Test accounts:');
+    console.log('  demo / demo123  (regular user)');
+    console.log('  admin / admin   (admin user)');
+    console.log('  jane / jane456  (regular user)');
+  });
+}
