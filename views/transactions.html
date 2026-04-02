@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo Bank — Transactions</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-brand">Demo Bank</div>
+    <div class="nav-links">
+      <a href="/dashboard" data-test="nav-dashboard">Dashboard</a>
+      <a href="/transfer" data-test="nav-transfer">Transfer</a>
+      <a href="/transactions" class="active" data-test="nav-transactions">Transactions</a>
+      <a href="/settings" data-test="nav-settings">Settings</a>
+    </div>
+    <div class="nav-user"><span id="user-name"></span><button onclick="logout()" data-test="logout-button">Logout</button></div>
+  </nav>
+  <div class="container">
+    <h1 class="page-title">Transaction History</h1>
+    <div class="card">
+      <div class="search-bar">
+        <input type="text" id="search" class="form-input" placeholder="Search transactions..." data-test="search-input">
+        <button class="btn btn-primary" onclick="searchTransactions()" data-test="search-button">Search</button>
+      </div>
+      <!-- BUG: Search query reflected back without sanitization (XSS) -->
+      <div id="search-info" style="font-size:13px;color:#666;margin-bottom:12px;"></div>
+      <table>
+        <thead>
+          <tr><th>Date</th><th>Description</th><th>Category</th><th style="text-align:right">Amount</th></tr>
+        </thead>
+        <tbody id="txn-body"></tbody>
+      </table>
+      <div id="empty-state" style="display:none;text-align:center;padding:40px;color:#999;">
+        No transactions found.
+      </div>
+    </div>
+  </div>
+  <script>
+    async function loadTransactions(search) {
+      const meRes = await fetch('/api/me');
+      if (!meRes.ok) return window.location.href = '/login';
+      const me = await meRes.json();
+      document.getElementById('user-name').textContent = me.name;
+
+      let url = '/api/transactions?account_id=1';
+      if (search) url += '&search=' + encodeURIComponent(search);
+
+      const res = await fetch(url);
+      const data = await res.json();
+      const tbody = document.getElementById('txn-body');
+      tbody.innerHTML = '';
+
+      const info = document.getElementById('search-info');
+      if (data.search_query) {
+        // SECURITY GAP: XSS — search_query is injected into innerHTML without escaping
+        info.innerHTML = `Showing results for: <strong>${data.search_query}</strong> (${data.total} found)`;
+      } else {
+        info.textContent = `${data.total} transactions`;
+      }
+
+      if (data.transactions.length === 0) {
+        document.getElementById('empty-state').style.display = 'block';
+        return;
+      }
+      document.getElementById('empty-state').style.display = 'none';
+
+      data.transactions.forEach(t => {
+        const cls = t.type === 'credit' ? 'badge-credit' : 'badge-debit';
+        const sign = t.type === 'credit' ? '+' : '-';
+        tbody.innerHTML += `
+          <tr data-test="transaction-row">
+            <td>${t.date}</td>
+            <td data-test="transaction-description">${t.description}</td>
+            <td><span class="badge ${cls}">${t.category}</span></td>
+            <td style="text-align:right;font-weight:600;">${sign}$${t.amount.toFixed(2)}</td>
+          </tr>`;
+      });
+    }
+
+    function searchTransactions() {
+      const q = document.getElementById('search').value;
+      loadTransactions(q);
+      // BUG: Search query added to URL hash without encoding (URL-based XSS)
+      window.location.hash = q;
+    }
+
+    // Load from hash on page load
+    const hashQuery = decodeURIComponent(window.location.hash.slice(1));
+    if (hashQuery) document.getElementById('search').value = hashQuery;
+
+    async function logout() { await fetch('/api/logout', { method: 'POST' }); window.location.href = '/login'; }
+    loadTransactions(hashQuery || '');
+  </script>
+</body>
+</html>

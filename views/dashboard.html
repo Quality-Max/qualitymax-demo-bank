@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo Bank — Dashboard</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-brand">Demo Bank</div>
+    <div class="nav-links">
+      <a href="/dashboard" class="active" data-test="nav-dashboard">Dashboard</a>
+      <a href="/transfer" data-test="nav-transfer">Transfer</a>
+      <a href="/transactions" data-test="nav-transactions">Transactions</a>
+      <a href="/settings" data-test="nav-settings">Settings</a>
+      <a href="/docs" data-test="nav-docs">API Docs</a>
+    </div>
+    <div class="nav-user">
+      <span id="user-name"></span>
+      <button onclick="logout()" data-test="logout-button">Logout</button>
+    </div>
+  </nav>
+  <div class="container">
+    <h1 class="page-title">Dashboard</h1>
+    <div class="card-grid" id="accounts"></div>
+    <div class="card">
+      <h2 style="font-size:18px;font-weight:600;margin-bottom:16px;">Recent Transactions</h2>
+      <table>
+        <thead>
+          <tr><th>Date</th><th>Description</th><th>Category</th><th style="text-align:right">Amount</th></tr>
+        </thead>
+        <tbody id="recent-txns"></tbody>
+      </table>
+    </div>
+  </div>
+  <script>
+    async function loadDashboard() {
+      const meRes = await fetch('/api/me');
+      if (!meRes.ok) return window.location.href = '/login';
+      const me = await meRes.json();
+      document.getElementById('user-name').textContent = me.name;
+
+      const accRes = await fetch('/api/accounts');
+      const accData = await accRes.json();
+      const grid = document.getElementById('accounts');
+      let totalBalance = 0;
+      accData.accounts.forEach(a => {
+        totalBalance += a.balance;
+        grid.innerHTML += `
+          <div class="card" data-test="account-card">
+            <div class="card-title">${a.name} (${a.number})</div>
+            <div class="card-value" data-test="account-balance">$${a.balance.toLocaleString('en-US', {minimumFractionDigits: 2})}</div>
+            <span class="badge badge-info">${a.type}</span>
+          </div>`;
+      });
+      grid.innerHTML = `
+        <div class="card">
+          <div class="card-title">Total Balance</div>
+          <div class="card-value" data-test="total-balance">$${totalBalance.toLocaleString('en-US', {minimumFractionDigits: 2})}</div>
+        </div>` + grid.innerHTML;
+
+      const txnRes = await fetch('/api/transactions?account_id=1');
+      const txnData = await txnRes.json();
+      const tbody = document.getElementById('recent-txns');
+      txnData.transactions.slice(0, 5).forEach(t => {
+        const cls = t.type === 'credit' ? 'badge-credit' : 'badge-debit';
+        const sign = t.type === 'credit' ? '+' : '-';
+        tbody.innerHTML += `
+          <tr data-test="transaction-row">
+            <td>${t.date}</td>
+            <td>${t.description}</td>
+            <td><span class="badge ${cls}">${t.category}</span></td>
+            <td style="text-align:right;font-weight:600;" data-test="transaction-amount">${sign}$${t.amount.toFixed(2)}</td>
+          </tr>`;
+      });
+    }
+    async function logout() {
+      await fetch('/api/logout', { method: 'POST' });
+      window.location.href = '/login';
+    }
+    loadDashboard();
+  </script>
+</body>
+</html>

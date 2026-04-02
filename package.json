@@ -1,0 +1,12 @@
+{
+  "name": "qualitymax-demo-bank",
+  "version": "1.0.0",
+  "description": "QualityMax Demo Bank - A deliberately vulnerable banking app for testing demos",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["testing", "demo", "qualitymax", "playwright", "k6"],
+  "license": "MIT"
+}

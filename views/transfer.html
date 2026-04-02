@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo Bank — Transfer</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-brand">Demo Bank</div>
+    <div class="nav-links">
+      <a href="/dashboard" data-test="nav-dashboard">Dashboard</a>
+      <a href="/transfer" class="active" data-test="nav-transfer">Transfer</a>
+      <a href="/transactions" data-test="nav-transactions">Transactions</a>
+      <a href="/settings" data-test="nav-settings">Settings</a>
+    </div>
+    <div class="nav-user"><span id="user-name"></span><button onclick="logout()" data-test="logout-button">Logout</button></div>
+  </nav>
+  <div class="container">
+    <h1 class="page-title">Transfer Money</h1>
+    <div class="card">
+      <div id="alert" class="alert" style="display:none;"></div>
+      <!-- BUG: No CSRF token in the form -->
+      <form id="transfer-form">
+        <div class="form-group">
+          <label for="from_account">From Account</label>
+          <select id="from_account" name="from_account_id" class="form-input" data-test="from-account" required></select>
+        </div>
+        <div class="form-group">
+          <label for="to_account">To Account</label>
+          <select id="to_account" name="to_account_id" class="form-input" data-test="to-account" required></select>
+        </div>
+        <div class="form-group">
+          <label for="amount">Amount ($)</label>
+          <!-- BUG: No min="0.01" or step="0.01" — accepts negative and very large values -->
+          <input type="number" id="amount" name="amount" class="form-input" placeholder="0.00" data-test="amount" required>
+        </div>
+        <div class="form-group">
+          <label for="description">Description</label>
+          <input type="text" id="description" name="description" class="form-input" placeholder="Transfer description" data-test="description">
+        </div>
+        <button type="submit" class="btn btn-primary" data-test="transfer-button">Send Transfer</button>
+      </form>
+    </div>
+  </div>
+  <script>
+    async function loadAccounts() {
+      const meRes = await fetch('/api/me');
+      if (!meRes.ok) return window.location.href = '/login';
+      const me = await meRes.json();
+      document.getElementById('user-name').textContent = me.name;
+
+      const res = await fetch('/api/accounts');
+      const data = await res.json();
+      const from = document.getElementById('from_account');
+      const to = document.getElementById('to_account');
+      data.accounts.forEach(a => {
+        from.innerHTML += `<option value="${a.id}">${a.name} — $${a.balance.toFixed(2)}</option>`;
+        to.innerHTML += `<option value="${a.id}">${a.name}</option>`;
+      });
+      // BUG: Also add other users' accounts to "to" dropdown (info leak)
+      to.innerHTML += `<option value="3">Admin Checking (****0001)</option>`;
+      to.innerHTML += `<option value="4">Jane Checking (****7744)</option>`;
+    }
+
+    document.getElementById('transfer-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const alert = document.getElementById('alert');
+      alert.style.display = 'none';
+
+      const body = {
+        from_account_id: parseInt(document.getElementById('from_account').value),
+        to_account_id: parseInt(document.getElementById('to_account').value),
+        amount: parseFloat(document.getElementById('amount').value),
+        description: document.getElementById('description').value,
+      };
+
+      // BUG: No client-side validation for negative amounts or same account
+      const res = await fetch('/api/transfer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        alert.className = 'alert alert-success';
+        alert.textContent = `Transfer successful! New balance: $${data.new_balance.toFixed(2)}`;
+        alert.style.display = 'block';
+        loadAccounts(); // Refresh
+      } else {
+        alert.className = 'alert alert-error';
+        alert.textContent = data.error || 'Transfer failed';
+        alert.style.display = 'block';
+      }
+    });
+
+    async function logout() { await fetch('/api/logout', { method: 'POST' }); window.location.href = '/login'; }
+    loadAccounts();
+  </script>
+</body>
+</html>
