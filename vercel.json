@@ -5,12 +5,12 @@
   },
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/handler" },
-    { "source": "/dashboard", "destination": "/views/dashboard.html" },
-    { "source": "/transfer", "destination": "/views/transfer.html" },
-    { "source": "/transactions", "destination": "/views/transactions.html" },
-    { "source": "/settings", "destination": "/views/settings.html" },
-    { "source": "/docs", "destination": "/views/docs.html" },
-    { "source": "/login", "destination": "/views/login.html" },
-    { "source": "/", "destination": "/views/login.html" }
+    { "source": "/dashboard", "destination": "/api/handler" },
+    { "source": "/transfer", "destination": "/api/handler" },
+    { "source": "/transactions", "destination": "/api/handler" },
+    { "source": "/settings", "destination": "/api/handler" },
+    { "source": "/docs", "destination": "/api/handler" },
+    { "source": "/login", "destination": "/api/handler" },
+    { "source": "/", "destination": "/api/handler" }
   ]
 }

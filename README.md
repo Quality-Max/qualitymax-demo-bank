@@ -14,6 +14,21 @@ node server.js
 
 Open http://localhost:3000
 
+## Live Demo Modes
+
+The app supports predictable live-demo states through `DEMO_MODE`:
+
+```bash
+DEMO_MODE=clean npm start            # Stable happy-path app
+DEMO_MODE=buggy npm start            # Negative transfer bug enabled
+DEMO_MODE=selector-change npm start  # Clean behavior, changed transfer selector
+```
+
+Use `npm test` to verify the modes locally.
+
+See [DEMO_SETUP.md](DEMO_SETUP.md) for the recommended Vercel deployments and
+paste-ready qmax-code demo prompts.
+
 ## Test Accounts
 
 | Username | Password | Role |
