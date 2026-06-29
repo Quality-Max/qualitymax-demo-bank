@@ -12,6 +12,9 @@ const path = require('path');
 const crypto = require('crypto');
 
 const PORT = process.env.PORT || 3000;
+const DEMO_MODE = process.env.DEMO_MODE || 'buggy';
+const IS_BUGGY_MODE = DEMO_MODE === 'buggy';
+const IS_SELECTOR_CHANGE_MODE = DEMO_MODE === 'selector-change';
 
 // ============================================================================
 // In-memory database
@@ -102,9 +105,30 @@ function serveFile(res, filePath) {
   const types = { '.html': 'text/html', '.css': 'text/css', '.js': 'application/javascript', '.png': 'image/png', '.svg': 'image/svg+xml' };
   fs.readFile(filePath, (err, data) => {
     if (err) { res.writeHead(404); res.end('Not Found'); return; }
+    if (ext === '.html') {
+      data = renderDemoHtml(data.toString());
+    }
     res.writeHead(200, { 'Content-Type': types[ext] || 'text/plain' });
     res.end(data);
   });
+}
+
+function renderDemoHtml(html) {
+  const transferNavSelector = IS_SELECTOR_CHANGE_MODE ? 'nav-send-money' : 'nav-transfer';
+  let rendered = html.replace(/data-test="nav-transfer"/g, `data-test="${transferNavSelector}"`);
+  rendered = rendered.replace(
+    '<body>',
+    `<body data-demo-mode="${DEMO_MODE}">\n  <script>window.DEMO_MODE = ${JSON.stringify(DEMO_MODE)};</script>`
+  );
+
+  if (!IS_BUGGY_MODE) {
+    rendered = rendered.replace(
+      'data-test="amount" required>',
+      'data-test="amount" min="0.01" step="0.01" required>'
+    );
+  }
+
+  return rendered;
 }
 
 
@@ -273,15 +297,32 @@ const server = http.createServer(async (req, res) => {
     if (!fromAccount) return json(res, { error: 'Source account not found' }, 404);
     if (!toAccount) return json(res, { error: 'Destination account not found' }, 404);
 
-    // BUG: No check that fromAccount belongs to the user (IDOR)
-    // BUG: Negative amounts are accepted — can steal money
-    // BUG: No check for NaN or Infinity
-    // BUG: No minimum transfer amount
-    // BUG: Can transfer to the same account
-    // BUG: Floating point precision issues (no rounding)
-
-    if (fromAccount.balance < amount) {
-      return json(res, { error: 'Insufficient funds' }, 400);
+    if (IS_BUGGY_MODE) {
+      // BUG: No check that fromAccount belongs to the user (IDOR)
+      // BUG: Negative amounts are accepted — can steal money
+      // BUG: No check for NaN or Infinity
+      // BUG: No minimum transfer amount
+      // BUG: Can transfer to the same account
+      // BUG: Floating point precision issues (no rounding)
+      if (fromAccount.balance < amount) {
+        return json(res, { error: 'Insufficient funds' }, 400);
+      }
+    } else {
+      if (!Number.isInteger(fromId) || !Number.isInteger(toId)) {
+        return json(res, { error: 'Invalid account selection' }, 400);
+      }
+      if (!Number.isFinite(amount) || amount <= 0) {
+        return json(res, { error: 'Amount must be greater than zero' }, 400);
+      }
+      if (fromAccount.userId !== user.id) {
+        return json(res, { error: 'Source account not found' }, 404);
+      }
+      if (fromId === toId) {
+        return json(res, { error: 'Choose a different destination account' }, 400);
+      }
+      if (fromAccount.balance < amount) {
+        return json(res, { error: 'Insufficient funds' }, 400);
+      }
     }
 
     fromAccount.balance -= amount;
@@ -311,7 +352,7 @@ const server = http.createServer(async (req, res) => {
 
   // --- API: Health ---
   if (method === 'GET' && pathname === '/api/health') {
-    return json(res, { status: 'ok', uptime: process.uptime() });
+    return json(res, { status: 'ok', mode: DEMO_MODE, uptime: process.uptime() });
   }
 
   // --- 404 ---
@@ -326,6 +367,7 @@ if (process.env.VERCEL) {
 } else {
   server.listen(PORT, () => {
     console.log(`QualityMax Demo Bank running on http://localhost:${PORT}`);
+    console.log(`Demo mode: ${DEMO_MODE}`);
     console.log('');
     console.log('Test accounts:');
     console.log('  demo / demo123  (regular user)');
