@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="brand_background">#07111F</color>
+    <color name="brand_surface">#101C2E</color>
+    <color name="brand_violet">#8B7CFF</color>
+    <color name="brand_text">#F5F7FF</color>
+    <color name="brand_muted">#9AA8BF</color>
+    <color name="brand_danger">#FF5D73</color>
+    <color name="brand_success">#3DDC97</color>
+</resources>

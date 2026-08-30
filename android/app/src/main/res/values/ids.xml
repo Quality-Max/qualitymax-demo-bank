@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="login_username" type="id" />
+    <item name="login_password" type="id" />
+    <item name="login_submit" type="id" />
+    <item name="login_status" type="id" />
+    <item name="dashboard_total_balance" type="id" />
+    <item name="dashboard_transfer" type="id" />
+    <item name="dashboard_transactions" type="id" />
+    <item name="dashboard_qualitymax_test" type="id" />
+    <item name="dashboard_status" type="id" />
+    <item name="transfer_from_account" type="id" />
+    <item name="transfer_to_account" type="id" />
+    <item name="transfer_amount" type="id" />
+    <item name="transfer_description" type="id" />
+    <item name="transfer_submit" type="id" />
+    <item name="transfer_status" type="id" />
+    <item name="receipt_title" type="id" />
+    <item name="receipt_before_balance" type="id" />
+    <item name="receipt_after_balance" type="id" />
+    <item name="receipt_status" type="id" />
+    <item name="transactions_search" type="id" />
+    <item name="transactions_search_submit" type="id" />
+</resources>

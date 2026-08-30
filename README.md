@@ -29,6 +29,15 @@ Use `npm test` to verify the modes locally.
 See [DEMO_SETUP.md](DEMO_SETUP.md) for the recommended Vercel deployments and
 paste-ready qmax-code demo prompts.
 
+## Native Demo Apps
+
+Production-shaped Android and iOS clients mirror the web dashboard, account
+balances, positive transfers, searchable history, refresh, and sign-out
+journeys. Each keeps the QualityMax safety test separate for recording the same
+banking crisis and its verified prevention on managed devices. See
+[NATIVE_APPS.md](NATIVE_APPS.md) for build, launch, and deterministic capture
+instructions.
+
 ## Test Accounts
 
 | Username | Password | Role |
@@ -70,6 +79,8 @@ See [API.md](API.md) for the full API specification.
 
 ```
 qualitymax-demo-bank/
+  android/             # Native Android demo client
+  ios/                 # Native iOS demo client
   server.js           # Node.js server (zero dependencies)
   views/
     login.html        # Login page
@@ -82,6 +93,7 @@ qualitymax-demo-bank/
     style.css         # Styles
   REQUIREMENTS.md     # User stories (import into QualityMax)
   API.md              # API spec (for k6 test generation)
+  NATIVE_APPS.md      # Native build and evidence-capture guide
   SMOKE_TESTS.md      # Incomplete smoke checklist (gap analysis bait)
 ```
 
