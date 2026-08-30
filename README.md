@@ -33,8 +33,10 @@ paste-ready qmax-code demo prompts.
 
 Production-shaped Android and iOS clients mirror the web dashboard, account
 balances, positive transfers, searchable history, refresh, and sign-out
-journeys. Each keeps the QualityMax safety test separate for recording the same
-banking crisis and its verified prevention on managed devices. See
+journeys. Hidden capture routes record the same banking crisis and its verified
+prevention on managed devices. The visible
+clients remain ordinary banking interfaces; deterministic capture routes drive
+the verification scenario without exposing test controls to customers. See
 [NATIVE_APPS.md](NATIVE_APPS.md) for build, launch, and deterministic capture
 instructions.
 

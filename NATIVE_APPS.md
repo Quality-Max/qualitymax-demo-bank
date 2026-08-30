@@ -10,7 +10,7 @@ Both clients mirror the core web banking journeys:
 - ordinary positive transfers with success feedback
 - recent activity and searchable transaction history
 - refresh and sign-out controls
-- a separate QualityMax safety test with an inspectable verification receipt
+- a banking-only customer interface, with a separate inspectable verification receipt for recorded test runs
 
 ## Crisis-prevention scenario
 
@@ -73,8 +73,9 @@ xcrun simctl launch booted io.qualitymax.demobank --qualitymax-capture-transfer
 xcrun simctl launch booted io.qualitymax.demobank --qualitymax-capture-crisis
 ```
 
-The capture flags sign in automatically and stop on the requested live-data
-screen. The crisis flag also submits the prefilled negative transfer,
+The hidden capture flags sign in automatically and stop on the requested
+live-data screen without adding test controls or narration to the banking UI.
+The crisis flag also submits the prefilled negative transfer,
 producing the red failure receipt in `buggy` mode and the green prevention
 receipt in `clean` mode. They have no effect on a normal app launch.
 
@@ -85,9 +86,8 @@ Both apps expose the same semantic identifiers:
 | Screen | Identifier |
 | --- | --- |
 | Login | `login.username`, `login.password`, `login.submit` |
-| Dashboard | `dashboard.total_balance`, `dashboard.transfer`, `dashboard.transactions`, `dashboard.qualitymax_test` |
+| Dashboard | `dashboard.total_balance`, `dashboard.transfer`, `dashboard.transactions` |
 | Transfer | `transfer.from_account`, `transfer.to_account`, `transfer.amount`, `transfer.submit` |
-| Android negative test helper | `transfer.use_negative_amount` |
 | Transactions | `transactions.search`, `transactions.search_submit`, `transactions.row.<id>` |
 | Evidence | `receipt.title`, `receipt.before_balance`, `receipt.after_balance`, `receipt.status` |
 

@@ -81,12 +81,6 @@ private struct LoginView: View {
                     }
                 }
 
-                Text("BACKEND  \(model.baseURLString)")
-                    .font(.caption2.weight(.bold))
-                    .tracking(1.1)
-                    .foregroundStyle(Brand.muted)
-                    .lineLimit(2)
-                    .padding(.top, 16)
             }
         }
     }
@@ -96,12 +90,12 @@ private struct DashboardView: View {
     @ObservedObject var model: DemoBankModel
 
     var body: some View {
-        ScreenScroll(context: "\(model.backendMode.uppercased()) BACKEND") {
+        ScreenScroll(context: "PERSONAL BANKING") {
             VStack(alignment: .leading, spacing: 0) {
                 Spacer().frame(height: 30)
                 Eyebrow("WELCOME BACK", color: Brand.violet)
                 HeroTitle("Dashboard")
-                SupportingText(model.user?.name ?? "Your accounts")
+                SupportingText(model.user.map { "\($0.name) · Your accounts and recent activity" } ?? "Your accounts and recent activity")
                 Spacer().frame(height: 22)
 
                 BrandCard(border: Brand.violet) {
@@ -161,30 +155,6 @@ private struct DashboardView: View {
                         }
                     }
                 }
-
-                Button {
-                    model.openTransfer(qualityMaxTest: true)
-                } label: {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("QUALITYMAX SAFETY TEST")
-                                .font(.caption2.weight(.black))
-                                .tracking(1)
-                            Text("Attempt the negative-transfer exploit")
-                                .font(.subheadline.weight(.semibold))
-                        }
-                        Spacer()
-                        Image(systemName: "shield.lefthalf.filled")
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(16)
-                }
-                .buttonStyle(.plain)
-                .foregroundStyle(Brand.violet)
-                .background(Brand.violet.opacity(0.08), in: RoundedRectangle(cornerRadius: 16))
-                .overlay(RoundedRectangle(cornerRadius: 16).stroke(Brand.violet.opacity(0.55), lineWidth: 1))
-                .padding(.top, 14)
-                .accessibilityIdentifier("dashboard.qualitymax_test")
 
                 HStack(spacing: 12) {
                     Button("Refresh") { Task { await model.refreshAccounts() } }
@@ -263,29 +233,17 @@ private struct TransferView: View {
         _sourceID = State(initialValue: first)
         _destinationID = State(initialValue: second)
         _amount = State(initialValue: model.qualityMaxTestMode ? "-100.00" : "250.00")
-        _transferDescription = State(initialValue: model.qualityMaxTestMode ? "QualityMax crisis-prevention test" : "Transfer to Savings")
+        _transferDescription = State(initialValue: "Transfer to Savings")
     }
 
     var body: some View {
-        ScreenScroll(context: model.qualityMaxTestMode ? "QUALITYMAX SAFETY TEST" : "MONEY TRANSFER") {
+        ScreenScroll(context: "MONEY TRANSFER") {
             VStack(alignment: .leading, spacing: 0) {
                 Spacer().frame(height: 28)
-                Eyebrow(model.qualityMaxTestMode ? "HIGH-RISK JOURNEY" : "BANKING", color: model.qualityMaxTestMode ? Brand.danger : Brand.violet)
+                Eyebrow("BANKING", color: Brand.violet)
                 HeroTitle("Transfer Money")
-                SupportingText(model.qualityMaxTestMode ? "QualityMax is testing the rule ordinary happy-path automation misses." : "Move funds securely between your accounts.")
+                SupportingText("Move funds securely between your accounts.")
                 Spacer().frame(height: 20)
-
-                if model.qualityMaxTestMode {
-                    Text("TEST ASSERTION\nNegative transfers must be rejected and the source balance must not increase.")
-                    .font(.footnote.weight(.bold))
-                    .tracking(0.3)
-                    .foregroundStyle(Brand.text)
-                    .padding(16)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color(red: 47 / 255, green: 23 / 255, blue: 35 / 255), in: RoundedRectangle(cornerRadius: 16))
-                    .overlay(RoundedRectangle(cornerRadius: 16).stroke(Brand.danger.opacity(0.9), lineWidth: 1))
-                        .padding(.bottom, 16)
-                }
 
                 BrandCard {
                     VStack(alignment: .leading, spacing: 14) {
@@ -323,14 +281,14 @@ private struct TransferView: View {
                         Button {
                             submit()
                         } label: {
-                            Text(model.isLoading ? "Processing…" : model.qualityMaxTestMode ? "Attempt negative transfer" : "Send Transfer")
+                            Text(model.isLoading ? "Processing…" : "Send Transfer")
                                 .font(.headline.weight(.bold))
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 14)
                         }
                         .buttonStyle(.plain)
                         .foregroundStyle(.white)
-                        .background(model.qualityMaxTestMode ? Brand.danger : Brand.violet, in: RoundedRectangle(cornerRadius: 15))
+                        .background(Brand.violet, in: RoundedRectangle(cornerRadius: 15))
                         .disabled(model.isLoading)
                         .accessibilityIdentifier("transfer.submit")
 
@@ -408,7 +366,7 @@ private struct ReceiptView: View {
                         .overlay(RoundedRectangle(cornerRadius: 16).stroke(stateColor.opacity(0.85), lineWidth: 1))
                         .padding(.top, 16)
 
-                    PrimaryButton(title: receipt.isFailure ? "Verify the fixed backend" : "Run protection test again") {
+                    PrimaryButton(title: receipt.isFailure ? "Verify fixed release" : "Re-run verification") {
                         model.rerunTransfer()
                     }
                     .padding(.top, 18)
@@ -455,9 +413,9 @@ private struct ScreenScroll<Content: View>: View {
                             .minimumScaleFactor(0.65)
                             .allowsTightening(true)
                     }
-                    .padding(.top, geometry.safeAreaInsets.top)
                     .padding(.horizontal, 22)
-                    .frame(height: 58 + geometry.safeAreaInsets.top)
+                    .frame(height: 40)
+                    .padding(.top, max(geometry.safeAreaInsets.top - 12, 0))
                     .background(Brand.text)
                     .padding(.horizontal, -22)
                     content

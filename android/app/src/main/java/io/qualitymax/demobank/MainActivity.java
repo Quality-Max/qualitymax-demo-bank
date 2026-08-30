@@ -64,11 +64,11 @@ public final class MainActivity extends Activity {
 
     private void showLogin() {
         LinearLayout content = screen();
-        brandHeader(content, "NATIVE EVIDENCE CLIENT");
+        brandHeader(content, "SECURE MOBILE BANKING");
         content.addView(spacer(36));
-        content.addView(eyebrow("QUALITYMAX DEMO BANK", VIOLET));
-        content.addView(title("Banking, verified."));
-        content.addView(body("A real native client for proving that dangerous releases are stopped before customers find them."));
+        content.addView(eyebrow("WELCOME", VIOLET));
+        content.addView(title("Sign in to Demo Bank"));
+        content.addView(body("Access your accounts, transfers, and transaction history."));
         content.addView(spacer(26));
 
         LinearLayout card = card();
@@ -102,8 +102,6 @@ public final class MainActivity extends Activity {
         status.setContentDescription("login.status");
         card.addView(status);
         content.addView(card);
-        content.addView(spacer(18));
-        content.addView(backendCaption());
 
         signIn.setOnClickListener(view -> {
             hideKeyboard();
@@ -139,11 +137,11 @@ public final class MainActivity extends Activity {
 
     private void showDashboard() {
         LinearLayout content = screen();
-        brandHeader(content, modeLabel());
+        brandHeader(content, "PERSONAL BANKING");
         content.addView(spacer(30));
         content.addView(eyebrow("WELCOME BACK", VIOLET));
         content.addView(title(currentUser == null ? "Your accounts" : currentUser.name));
-        content.addView(body("Live balances from the shared Demo Bank backend."));
+        content.addView(body("Your accounts and recent activity at a glance."));
         content.addView(spacer(22));
 
         LinearLayout totalCard = cardWithBorder(VIOLET);
@@ -211,17 +209,6 @@ public final class MainActivity extends Activity {
             }
         }
         content.addView(recent);
-
-        content.addView(spacer(14));
-        TextView proof = body("QUALITYMAX SAFETY TEST\nAttempt the negative-transfer exploit before this release reaches customers.");
-        proof.setTextColor(VIOLET);
-        proof.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
-        proof.setBackground(rounded(Color.rgb(238, 237, 255), VIOLET, 1));
-        proof.setPadding(dp(16), dp(14), dp(16), dp(14));
-        proof.setId(R.id.dashboard_qualitymax_test);
-        proof.setContentDescription("dashboard.qualitymax_test");
-        proof.setOnClickListener(view -> showTransfer(true));
-        content.addView(proof);
 
         content.addView(spacer(14));
         Button signOut = secondaryButton("Sign out");
@@ -317,24 +304,12 @@ public final class MainActivity extends Activity {
         }
 
         LinearLayout content = screen();
-        brandHeader(content, qualityMaxTest ? "QUALITYMAX SAFETY TEST" : "MONEY TRANSFER");
+        brandHeader(content, "MONEY TRANSFER");
         content.addView(spacer(28));
-        content.addView(eyebrow(qualityMaxTest ? "HIGH-RISK JOURNEY" : "BANKING", qualityMaxTest ? DANGER : VIOLET));
+        content.addView(eyebrow("BANKING", VIOLET));
         content.addView(title("Transfer Money"));
-        content.addView(body(qualityMaxTest
-                ? "QualityMax is testing the rule ordinary happy-path automation misses."
-                : "Move funds securely between your accounts."));
+        content.addView(body("Move funds securely between your accounts."));
         content.addView(spacer(20));
-
-        if (qualityMaxTest) {
-            TextView warning = body("TEST ASSERTION\nNegative transfers must be rejected and the source balance must not increase.");
-            warning.setTextColor(DANGER);
-            warning.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
-            warning.setBackground(rounded(Color.rgb(254, 242, 242), DANGER, 1));
-            warning.setPadding(dp(16), dp(14), dp(16), dp(14));
-            content.addView(warning);
-            content.addView(spacer(16));
-        }
 
         LinearLayout card = card();
         List<String> accountLabels = new ArrayList<>();
@@ -361,27 +336,17 @@ public final class MainActivity extends Activity {
         EditText amount = input(
                 "Amount",
                 qualityMaxTest ? "-100.00" : "250.00",
-                InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED
+                InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
         );
         amount.setId(R.id.transfer_amount);
         amount.setContentDescription("transfer.amount");
         card.addView(amount);
-        if (!qualityMaxTest) {
-            TextView useNegativeAmount = caption("Use QualityMax test amount (−$100)");
-            useNegativeAmount.setTextColor(VIOLET);
-            useNegativeAmount.setPadding(0, dp(10), 0, 0);
-            useNegativeAmount.setClickable(true);
-            useNegativeAmount.setFocusable(true);
-            useNegativeAmount.setContentDescription("transfer.use_negative_amount");
-            useNegativeAmount.setOnClickListener(view -> amount.setText("-100.00"));
-            card.addView(useNegativeAmount);
-        }
         card.addView(spacer(14));
 
         card.addView(fieldLabel("DESCRIPTION"));
         EditText description = input(
                 "Description",
-                qualityMaxTest ? "QualityMax crisis-prevention test" : "Transfer to Savings",
+                "Transfer to Savings",
                 InputType.TYPE_CLASS_TEXT
         );
         description.setId(R.id.transfer_description);
@@ -389,9 +354,7 @@ public final class MainActivity extends Activity {
         card.addView(description);
         card.addView(spacer(18));
 
-        Button submit = qualityMaxTest
-                ? dangerButton("Attempt negative transfer")
-                : primaryButton("Send Transfer");
+        Button submit = primaryButton("Send Transfer");
         submit.setId(R.id.transfer_submit);
         submit.setContentDescription("transfer.submit");
         card.addView(submit);
@@ -427,7 +390,7 @@ public final class MainActivity extends Activity {
             DemoBankModels.Account destination = dashboard.accounts.get(toIndex);
             String requestedDescription = description.getText().toString();
             submit.setEnabled(false);
-            submit.setText("Running evidence test…");
+            submit.setText("Processing transfer…");
             status.setText("");
 
             executor.execute(() -> {
@@ -458,7 +421,7 @@ public final class MainActivity extends Activity {
                 } catch (Exception transferError) {
                     runOnUiThread(() -> {
                         submit.setEnabled(true);
-                        submit.setText("Attempt negative transfer");
+                        submit.setText("Send Transfer");
                         showError(status, "Transfer request failed: " + transferError.getMessage());
                     });
                     return;
@@ -486,7 +449,7 @@ public final class MainActivity extends Activity {
                 } catch (Exception verificationError) {
                     runOnUiThread(() -> {
                         submit.setEnabled(true);
-                        submit.setText("Attempt negative transfer");
+                        submit.setText("Send Transfer");
                         showError(
                                 status,
                                 "Transfer was accepted, but balance verification failed: "
@@ -600,7 +563,7 @@ public final class MainActivity extends Activity {
         content.addView(proof);
         content.addView(spacer(18));
 
-        Button rerun = primaryButton(prevented ? "Run protection test again" : "Verify the fixed backend");
+        Button rerun = primaryButton(prevented ? "Re-run verification" : "Verify fixed release");
         rerun.setOnClickListener(view -> {
             executor.execute(() -> {
                 try {
@@ -658,7 +621,7 @@ public final class MainActivity extends Activity {
         } catch (Exception verificationError) {
             runOnUiThread(() -> {
                 submit.setEnabled(true);
-                submit.setText("Attempt negative transfer");
+                submit.setText("Send Transfer");
                 showError(
                         status,
                         "Transfer was rejected, but balance verification failed: "
@@ -835,25 +798,36 @@ public final class MainActivity extends Activity {
 
     private Spinner accountSpinner(List<String> labels) {
         Spinner spinner = new Spinner(this);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_spinner_item,
-                labels
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, labels) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                TextView selected = accountSpinnerRow(super.getView(position, convertView, parent));
+                selected.setText(labels.get(position) + "  ▾");
+                return selected;
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                return accountSpinnerRow(super.getDropDownView(position, convertView, parent));
+            }
+        };
         spinner.setAdapter(adapter);
         spinner.setPadding(dp(10), dp(8), dp(10), dp(8));
-        spinner.setBackground(rounded(Color.WHITE, Color.TRANSPARENT, 0));
+        spinner.setBackground(rounded(SURFACE_RAISED, Color.rgb(209, 213, 219), 1));
         spinner.setLayoutParams(matchWidth());
         return spinner;
     }
 
-    private Button primaryButton(String value) {
-        return button(value, VIOLET, Color.WHITE);
+    private TextView accountSpinnerRow(View row) {
+        TextView text = (TextView) row;
+        text.setTextColor(TEXT);
+        text.setTextSize(16);
+        text.setPadding(dp(14), dp(12), dp(14), dp(12));
+        return text;
     }
 
-    private Button dangerButton(String value) {
-        return button(value, DANGER, Color.WHITE);
+    private Button primaryButton(String value) {
+        return button(value, VIOLET, Color.WHITE);
     }
 
     private Button secondaryButton(String value) {
@@ -917,17 +891,6 @@ public final class MainActivity extends Activity {
         divider.setBackgroundColor(Color.rgb(232, 233, 238));
         divider.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(1)));
         return divider;
-    }
-
-    private TextView backendCaption() {
-        return caption("BACKEND  " + BuildConfig.DEMO_BANK_BASE_URL);
-    }
-
-    private String modeLabel() {
-        if (dashboard == null || dashboard.backendMode == null || dashboard.backendMode.isEmpty()) {
-            return "LIVE BACKEND";
-        }
-        return dashboard.backendMode.toUpperCase(Locale.US) + " BACKEND";
     }
 
     private View spacer(int heightDp) {

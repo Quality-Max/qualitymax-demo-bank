@@ -7,7 +7,6 @@
     <item name="dashboard_total_balance" type="id" />
     <item name="dashboard_transfer" type="id" />
     <item name="dashboard_transactions" type="id" />
-    <item name="dashboard_qualitymax_test" type="id" />
     <item name="dashboard_status" type="id" />
     <item name="transfer_from_account" type="id" />
     <item name="transfer_to_account" type="id" />

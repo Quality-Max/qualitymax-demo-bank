@@ -258,7 +258,7 @@ final class DemoBankModel: ObservableObject {
                     from: accounts[0],
                     to: accounts[1],
                     amount: -100,
-                    description: "QualityMax crisis-prevention test"
+                    description: "Transfer to Savings"
                 )
             } else {
                 qualityMaxTestMode = destination == .transfer
