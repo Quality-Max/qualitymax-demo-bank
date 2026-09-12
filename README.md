@@ -1,5 +1,9 @@
 # QualityMax Demo Bank
 
+[Web testing quickstart](https://docs.qualitymax.io/quickstart-web-app/) · [Example directory](https://github.com/Quality-Max/qualitymax/blob/main/docs/examples.md)
+
+This repository is an intentionally vulnerable test fixture. Use synthetic data in a controlled environment; its behavior is not a production banking implementation.
+
 A deliberately vulnerable banking application for demonstrating [QualityMax](https://qualitymax.io) testing capabilities.
 
 **DO NOT deploy this in production.** This app contains intentional security vulnerabilities for testing purposes.
