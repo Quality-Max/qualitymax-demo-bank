@@ -1,0 +1,361 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A10000000000000000000001 /* QualityMaxDemoBankApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000001 /* QualityMaxDemoBankApp.swift */; };
+		A10000000000000000000002 /* DemoBankModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000002 /* DemoBankModels.swift */; };
+		A10000000000000000000003 /* DemoBankAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000003 /* DemoBankAPI.swift */; };
+		A10000000000000000000004 /* DemoBankModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000004 /* DemoBankModel.swift */; };
+		A10000000000000000000005 /* Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000005 /* Views.swift */; };
+		A10000000000000000000006 /* EvidenceRulesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000007 /* EvidenceRulesTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C10000000000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D10000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E10000000000000000000001;
+			remoteInfo = QualityMaxDemoBank;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		B10000000000000000000001 /* QualityMaxDemoBankApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QualityMaxDemoBankApp.swift; sourceTree = "<group>"; };
+		B10000000000000000000002 /* DemoBankModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoBankModels.swift; sourceTree = "<group>"; };
+		B10000000000000000000003 /* DemoBankAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoBankAPI.swift; sourceTree = "<group>"; };
+		B10000000000000000000004 /* DemoBankModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoBankModel.swift; sourceTree = "<group>"; };
+		B10000000000000000000005 /* Views.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views.swift; sourceTree = "<group>"; };
+		B10000000000000000000006 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B10000000000000000000007 /* EvidenceRulesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvidenceRulesTests.swift; sourceTree = "<group>"; };
+		B10000000000000000000008 /* QualityMaxDemoBank.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QualityMaxDemoBank.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B10000000000000000000009 /* QualityMaxDemoBankTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QualityMaxDemoBankTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F10000000000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F10000000000000000000002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		G10000000000000000000001 = {
+			isa = PBXGroup;
+			children = (
+				G10000000000000000000002 /* QualityMaxDemoBank */,
+				G10000000000000000000003 /* QualityMaxDemoBankTests */,
+				G10000000000000000000004 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		G10000000000000000000002 /* QualityMaxDemoBank */ = {
+			isa = PBXGroup;
+			children = (
+				B10000000000000000000001 /* QualityMaxDemoBankApp.swift */,
+				B10000000000000000000002 /* DemoBankModels.swift */,
+				B10000000000000000000003 /* DemoBankAPI.swift */,
+				B10000000000000000000004 /* DemoBankModel.swift */,
+				B10000000000000000000005 /* Views.swift */,
+				B10000000000000000000006 /* Info.plist */,
+			);
+			path = QualityMaxDemoBank;
+			sourceTree = "<group>";
+		};
+		G10000000000000000000003 /* QualityMaxDemoBankTests */ = {
+			isa = PBXGroup;
+			children = (
+				B10000000000000000000007 /* EvidenceRulesTests.swift */,
+			);
+			path = QualityMaxDemoBankTests;
+			sourceTree = "<group>";
+		};
+		G10000000000000000000004 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B10000000000000000000008 /* QualityMaxDemoBank.app */,
+				B10000000000000000000009 /* QualityMaxDemoBankTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E10000000000000000000001 /* QualityMaxDemoBank */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = H10000000000000000000002 /* Build configuration list for PBXNativeTarget "QualityMaxDemoBank" */;
+			buildPhases = (
+				I10000000000000000000001 /* Sources */,
+				F10000000000000000000001 /* Frameworks */,
+				J10000000000000000000001 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = QualityMaxDemoBank;
+			productName = QualityMaxDemoBank;
+			productReference = B10000000000000000000008 /* QualityMaxDemoBank.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E10000000000000000000002 /* QualityMaxDemoBankTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = H10000000000000000000003 /* Build configuration list for PBXNativeTarget "QualityMaxDemoBankTests" */;
+			buildPhases = (
+				I10000000000000000000002 /* Sources */,
+				F10000000000000000000002 /* Frameworks */,
+				J10000000000000000000002 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				K10000000000000000000001 /* PBXTargetDependency */,
+			);
+			name = QualityMaxDemoBankTests;
+			productName = QualityMaxDemoBankTests;
+			productReference = B10000000000000000000009 /* QualityMaxDemoBankTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D10000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2600;
+				LastUpgradeCheck = 2600;
+				TargetAttributes = {
+					E10000000000000000000001 = {
+						CreatedOnToolsVersion = 26.0;
+					};
+					E10000000000000000000002 = {
+						CreatedOnToolsVersion = 26.0;
+						TestTargetID = E10000000000000000000001;
+					};
+				};
+			};
+			buildConfigurationList = H10000000000000000000001 /* Build configuration list for PBXProject "QualityMaxDemoBank" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = G10000000000000000000001;
+			productRefGroup = G10000000000000000000004 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E10000000000000000000001 /* QualityMaxDemoBank */,
+				E10000000000000000000002 /* QualityMaxDemoBankTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		J10000000000000000000001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		J10000000000000000000002 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		I10000000000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000001 /* QualityMaxDemoBankApp.swift in Sources */,
+				A10000000000000000000002 /* DemoBankModels.swift in Sources */,
+				A10000000000000000000003 /* DemoBankAPI.swift in Sources */,
+				A10000000000000000000004 /* DemoBankModel.swift in Sources */,
+				A10000000000000000000005 /* Views.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		I10000000000000000000002 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000006 /* EvidenceRulesTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		K10000000000000000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E10000000000000000000001 /* QualityMaxDemoBank */;
+			targetProxy = C10000000000000000000001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		L10000000000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+		};
+			name = Debug;
+		};
+		L10000000000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		L10000000000000000000003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEMO_BANK_BASE_URL = "http://127.0.0.1:3000";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = QualityMaxDemoBank/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.qualitymax.demobank;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		L10000000000000000000004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEMO_BANK_BASE_URL = "http://127.0.0.1:3000";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = QualityMaxDemoBank/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.qualitymax.demobank;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		L10000000000000000000005 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.qualitymax.demobank.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QualityMaxDemoBank.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/QualityMaxDemoBank";
+			};
+			name = Debug;
+		};
+		L10000000000000000000006 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.qualitymax.demobank.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QualityMaxDemoBank.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/QualityMaxDemoBank";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		H10000000000000000000001 /* Build configuration list for PBXProject "QualityMaxDemoBank" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				L10000000000000000000001 /* Debug */,
+				L10000000000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		H10000000000000000000002 /* Build configuration list for PBXNativeTarget "QualityMaxDemoBank" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				L10000000000000000000003 /* Debug */,
+				L10000000000000000000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		H10000000000000000000003 /* Build configuration list for PBXNativeTarget "QualityMaxDemoBankTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				L10000000000000000000005 /* Debug */,
+				L10000000000000000000006 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D10000000000000000000001 /* Project object */;
+}

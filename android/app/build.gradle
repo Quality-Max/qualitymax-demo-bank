@@ -1,0 +1,40 @@
+plugins {
+    id "com.android.application"
+}
+
+def configuredBaseUrl = providers.gradleProperty("demoBankBaseUrl")
+    .orElse("http://10.0.2.2:3000")
+    .get()
+
+android {
+    namespace "io.qualitymax.demobank"
+    compileSdk 35
+
+    defaultConfig {
+        applicationId "io.qualitymax.demobank"
+        minSdk 26
+        targetSdk 35
+        versionCode 1
+        versionName "1.0"
+
+        buildConfigField "String", "DEMO_BANK_BASE_URL", "\"${configuredBaseUrl}\""
+        testInstrumentationRunner "android.test.InstrumentationTestRunner"
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+}
+
+dependencies {
+    testImplementation "junit:junit:4.13.2"
+}
