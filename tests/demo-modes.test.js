@@ -1,5 +1,6 @@
 const assert = require('assert');
 const { spawn } = require('child_process');
+const { test } = require('node:test');
 
 const ROOT = `${__dirname}/..`;
 
@@ -28,26 +29,34 @@ async function waitForHealth(baseUrl, expectedMode) {
 }
 
 async function withServer(mode, testFn) {
-  const port = 4100 + Math.floor(Math.random() * 1000);
-  const baseUrl = `http://127.0.0.1:${port}`;
-  const child = spawn(process.execPath, ['server.js'], {
+  // A kernel-assigned loopback port avoids collisions with concurrent demo runs.
+  const child = spawn(process.execPath, ['-e', `
+    const server = require('./server');
+    server.listen(0, '127.0.0.1', () => process.send(server.address().port));
+  `], {
     cwd: ROOT,
-    env: { ...process.env, PORT: String(port), DEMO_MODE: mode },
-    stdio: ['ignore', 'pipe', 'pipe'],
+    // No parent credentials or deployment flags enter the isolated fixture.
+    env: { DEMO_MODE: mode, VERCEL: '1' },
+    stdio: ['ignore', 'ignore', 'ignore', 'ipc'],
+  });
+  const exited = new Promise(resolve => {
+    child.once('exit', resolve);
+    child.once('error', resolve);
   });
 
-  let output = '';
-  child.stdout.on('data', chunk => { output += chunk.toString(); });
-  child.stderr.on('data', chunk => { output += chunk.toString(); });
-
   try {
+    const port = await new Promise((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error('Fixture did not start')), 5000);
+      child.once('message', value => { clearTimeout(timer); resolve(value); });
+      child.once('error', error => { clearTimeout(timer); reject(error); });
+      child.once('exit', () => { clearTimeout(timer); reject(new Error('Fixture exited before ready')); });
+    });
+    const baseUrl = `http://127.0.0.1:${port}`;
     await waitForHealth(baseUrl, mode);
     await testFn(baseUrl);
-  } catch (err) {
-    err.message += `\nServer output:\n${output}`;
-    throw err;
   } finally {
     child.kill();
+    await exited;
   }
 }
 
@@ -79,7 +88,7 @@ async function postTransfer(baseUrl, cookie, amount) {
   });
 }
 
-async function main() {
+test('clean mode rejects negative transfers', async () => {
   await withServer('clean', async baseUrl => {
     const cookie = await login(baseUrl);
     const res = await postTransfer(baseUrl, cookie, -100);
@@ -87,7 +96,9 @@ async function main() {
     assert.strictEqual(res.status, 400);
     assert.match(data.error, /greater than zero/i);
   });
+});
 
+test('buggy mode exposes the deliberate negative-transfer fault', async () => {
   await withServer('buggy', async baseUrl => {
     const cookie = await login(baseUrl);
     const res = await postTransfer(baseUrl, cookie, -100);
@@ -96,7 +107,9 @@ async function main() {
     assert.strictEqual(data.success, true);
     assert.ok(data.new_balance > 5420.50, 'negative transfer should increase source balance in buggy mode');
   });
+});
 
+test('selector-change mode exposes the replacement navigation selector', async () => {
   await withServer('selector-change', async baseUrl => {
     const cookie = await login(baseUrl);
     const page = await fetch(`${baseUrl}/dashboard`, { headers: { Cookie: cookie } });
@@ -105,11 +118,57 @@ async function main() {
     assert.ok(html.includes('data-test="nav-send-money"'));
     assert.ok(!html.includes('data-test="nav-transfer"'));
   });
+});
 
-  console.log('demo mode smoke tests passed');
+async function accounts(baseUrl, cookie) {
+  const res = await fetch(`${baseUrl}/api/accounts`, { headers: { Cookie: cookie } });
+  assert.strictEqual(res.status, 200);
+  return (await res.json()).accounts;
 }
 
-main().catch(err => {
-  console.error(err);
-  process.exit(1);
+async function transactions(baseUrl, cookie) {
+  const res = await fetch(`${baseUrl}/api/transactions?account_id=1`, { headers: { Cookie: cookie } });
+  assert.strictEqual(res.status, 200);
+  return (await res.json()).transactions;
+}
+
+test('a clean transfer debits and credits exactly once and preserves total funds', async () => {
+  await withServer('clean', async baseUrl => {
+    const cookie = await login(baseUrl);
+    const before = await accounts(baseUrl, cookie);
+    const ledgerBefore = await transactions(baseUrl, cookie);
+    const res = await postTransfer(baseUrl, cookie, 125);
+    const data = await res.json();
+    assert.strictEqual(res.status, 200);
+    assert.strictEqual(data.success, true);
+    const after = await accounts(baseUrl, cookie);
+    const source = after.find(account => account.id === 1);
+    const destination = after.find(account => account.id === 2);
+    assert.strictEqual(source.balance, before.find(account => account.id === 1).balance - 125);
+    assert.strictEqual(destination.balance, before.find(account => account.id === 2).balance + 125);
+    assert.strictEqual(data.new_balance, source.balance);
+    assert.strictEqual(after.reduce((sum, account) => sum + account.balance, 0),
+      before.reduce((sum, account) => sum + account.balance, 0));
+    const ledgerAfter = await transactions(baseUrl, cookie);
+    assert.strictEqual(ledgerAfter.length, ledgerBefore.length + 1);
+    const debit = ledgerAfter.find(entry => entry.id === data.transaction.id);
+    assert.ok(debit, 'response transaction must exist in the source ledger');
+    assert.strictEqual(debit.type, 'debit');
+    assert.strictEqual(debit.amount, 125);
+    assert.strictEqual(debit.accountId, 1);
+  });
+});
+
+test('a declined clean transfer changes neither balances nor the source ledger', async () => {
+  await withServer('clean', async baseUrl => {
+    const cookie = await login(baseUrl);
+    const before = await accounts(baseUrl, cookie);
+    const ledgerBefore = await transactions(baseUrl, cookie);
+    const res = await postTransfer(baseUrl, cookie, 1000000);
+    const data = await res.json();
+    assert.strictEqual(res.status, 400);
+    assert.match(data.error, /insufficient funds/i);
+    assert.deepStrictEqual(await accounts(baseUrl, cookie), before);
+    assert.deepStrictEqual(await transactions(baseUrl, cookie), ledgerBefore);
+  });
 });
