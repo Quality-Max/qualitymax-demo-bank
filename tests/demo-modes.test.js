@@ -1,4 +1,5 @@
 const assert = require('assert');
+const { test } = require('node:test');
 const { spawn } = require('child_process');
 
 const ROOT = `${__dirname}/..`;
@@ -79,37 +80,28 @@ async function postTransfer(baseUrl, cookie, amount) {
   });
 }
 
-async function main() {
-  await withServer('clean', async baseUrl => {
-    const cookie = await login(baseUrl);
-    const res = await postTransfer(baseUrl, cookie, -100);
-    const data = await res.json();
-    assert.strictEqual(res.status, 400);
-    assert.match(data.error, /greater than zero/i);
-  });
+test('clean mode rejects a negative transfer', () => withServer('clean', async baseUrl => {
+  const cookie = await login(baseUrl);
+  const res = await postTransfer(baseUrl, cookie, -100);
+  const data = await res.json();
+  assert.strictEqual(res.status, 400);
+  assert.match(data.error, /greater than zero/i);
+}));
 
-  await withServer('buggy', async baseUrl => {
-    const cookie = await login(baseUrl);
-    const res = await postTransfer(baseUrl, cookie, -100);
-    const data = await res.json();
-    assert.strictEqual(res.status, 200);
-    assert.strictEqual(data.success, true);
-    assert.ok(data.new_balance > 5420.50, 'negative transfer should increase source balance in buggy mode');
-  });
+test('buggy mode exposes the negative-transfer regression', () => withServer('buggy', async baseUrl => {
+  const cookie = await login(baseUrl);
+  const res = await postTransfer(baseUrl, cookie, -100);
+  const data = await res.json();
+  assert.strictEqual(res.status, 200);
+  assert.strictEqual(data.success, true);
+  assert.ok(data.new_balance > 5420.50, 'negative transfer should increase source balance in buggy mode');
+}));
 
-  await withServer('selector-change', async baseUrl => {
-    const cookie = await login(baseUrl);
-    const page = await fetch(`${baseUrl}/dashboard`, { headers: { Cookie: cookie } });
-    const html = await page.text();
-    assert.strictEqual(page.status, 200);
-    assert.ok(html.includes('data-test="nav-send-money"'));
-    assert.ok(!html.includes('data-test="nav-transfer"'));
-  });
-
-  console.log('demo mode smoke tests passed');
-}
-
-main().catch(err => {
-  console.error(err);
-  process.exit(1);
-});
+test('selector-change mode exposes the renamed navigation target', () => withServer('selector-change', async baseUrl => {
+  const cookie = await login(baseUrl);
+  const page = await fetch(`${baseUrl}/dashboard`, { headers: { Cookie: cookie } });
+  const html = await page.text();
+  assert.strictEqual(page.status, 200);
+  assert.ok(html.includes('data-test="nav-send-money"'));
+  assert.ok(!html.includes('data-test="nav-transfer"'));
+}));
