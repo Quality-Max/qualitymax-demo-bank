@@ -6,8 +6,12 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
-    "test": "node --test tests/demo-modes.test.js"
+    "test": "node --test tests/demo-modes.test.js",
+    "test:e2e": "playwright test"
   },
   "keywords": ["testing", "demo", "qualitymax", "playwright", "k6"],
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "1.64.1"
+  }
 }

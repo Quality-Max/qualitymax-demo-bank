@@ -94,7 +94,7 @@ function parseBody(req) {
 }
 
 function json(res, data, status = 200) {
-  res.writeHead(status, { 'Content-Type': 'application/json' });
+  res.writeHead(status, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
   res.end(JSON.stringify(data));
 }
 
@@ -108,7 +108,10 @@ function serveFile(res, filePath) {
     if (ext === '.html') {
       data = renderDemoHtml(data.toString());
     }
-    res.writeHead(200, { 'Content-Type': types[ext] || 'text/plain' });
+    res.writeHead(200, {
+      'Content-Type': types[ext] || 'text/plain',
+      ...(ext === '.html' ? { 'Cache-Control': 'no-store' } : {}),
+    });
     res.end(data);
   });
 }
