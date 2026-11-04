@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
-    "test": "node tests/demo-modes.test.js"
+    "test": "node --test tests/demo-modes.test.js"
   },
   "keywords": ["testing", "demo", "qualitymax", "playwright", "k6"],
   "license": "MIT"
