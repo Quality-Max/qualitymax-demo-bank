@@ -30,6 +30,10 @@ DEMO_MODE=selector-change npm start  # Clean behavior, changed transfer selector
 
 Use `npm test` to verify the modes locally.
 
+Browser regression suites are available with `npm run test:e2e`. See
+[the E2E guide](tests/e2e/README.md) for installation, coverage, and running each
+suite through 9lives with provenance receipts.
+
 See [DEMO_SETUP.md](DEMO_SETUP.md) for the recommended Vercel deployments and
 paste-ready qmax-code demo prompts.
 
