@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Broken quantity total demo fixture</title>
+  </head>
+  <body>
+    <main>
+      <h1>Workshop order</h1>
+      <label for="quantity">Quantity</label>
+      <input id="quantity" type="number" min="1" value="1">
+      <p>Total: <output id="total" aria-live="polite">$10.00</output></p>
+    </main>
+    <script>
+      const unitPrice = 10;
+      const quantity = document.querySelector("#quantity");
+      const total = document.querySelector("#total");
+      const renderTotal = () => {
+        total.textContent = `$${unitPrice.toFixed(2)}`;
+      };
+      quantity.addEventListener("input", renderTotal);
+      renderTotal();
+    </script>
+  </body>
+</html>

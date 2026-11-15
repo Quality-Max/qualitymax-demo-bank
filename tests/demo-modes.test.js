@@ -1,6 +1,9 @@
 const assert = require('assert');
 const { test } = require('node:test');
 const { spawn } = require('child_process');
+const fs = require('node:fs');
+const path = require('node:path');
+const vm = require('node:vm');
 
 const ROOT = `${__dirname}/..`;
 
@@ -105,3 +108,47 @@ test('selector-change mode exposes the renamed navigation target', () => withSer
   assert.ok(html.includes('data-test="nav-send-money"'));
   assert.ok(!html.includes('data-test="nav-transfer"'));
 }));
+
+for (const mode of ['clean', 'buggy', 'selector-change']) {
+  test(`${mode} mode serves standalone Zapier fixtures with their expected quantity totals`, () => withServer(mode, async baseUrl => {
+    for (const [name, expectedTotal] of [
+      ['quantity-total.broken.fixture.html', '$10.00'],
+      ['quantity-total.fixture.html', '$30.00'],
+    ]) {
+      const response = await fetch(`${baseUrl}/zapier/${name}`);
+      assert.strictEqual(response.status, 200);
+      assert.match(response.headers.get('content-type'), /^text\/html/);
+      const html = await response.text();
+      assert.strictEqual(html, fs.readFileSync(path.join(ROOT, 'public/zapier', name), 'utf8'));
+      assert.match(html, /<label for="quantity">Quantity<\/label>/);
+      assert.match(html, /<input id="quantity" type="number" min="1" value="1">/);
+      assert.match(html, /<output id="total" aria-live="polite">\$10\.00<\/output>/);
+
+      const listeners = {};
+      const quantity = {
+        value: '1',
+        addEventListener(event, callback) { listeners[event] = callback; },
+      };
+      const total = { textContent: '' };
+      const script = html.match(/<script>([\s\S]*?)<\/script>/)[1];
+      vm.runInNewContext(script, {
+        document: {
+          querySelector(selector) {
+            if (selector === '#quantity') return quantity;
+            if (selector === '#total') return total;
+            throw new Error(`Unexpected selector: ${selector}`);
+          },
+        },
+      });
+      assert.strictEqual(total.textContent, '$10.00');
+      quantity.value = '3';
+      listeners.input();
+      assert.strictEqual(total.textContent, expectedTotal);
+    }
+
+    for (const pathname of ['/zapier/server.js', '/zapier/README.md', '/zapier/unknown.html']) {
+      const response = await fetch(`${baseUrl}${pathname}`);
+      assert.strictEqual(response.status, 404, pathname);
+    }
+  }));
+}
