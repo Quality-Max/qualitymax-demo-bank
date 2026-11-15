@@ -99,13 +99,17 @@ function json(res, data, status = 200) {
 }
 
 const BASE_DIR = __dirname;
+const ZAPIER_FIXTURES = new Map([
+  ['/zapier/quantity-total.fixture.html', 'quantity-total.fixture.html'],
+  ['/zapier/quantity-total.broken.fixture.html', 'quantity-total.broken.fixture.html'],
+]);
 
-function serveFile(res, filePath) {
+function serveFile(res, filePath, renderHtml = true) {
   const ext = path.extname(filePath);
   const types = { '.html': 'text/html', '.css': 'text/css', '.js': 'application/javascript', '.png': 'image/png', '.svg': 'image/svg+xml' };
   fs.readFile(filePath, (err, data) => {
     if (err) { res.writeHead(404); res.end('Not Found'); return; }
-    if (ext === '.html') {
+    if (ext === '.html' && renderHtml) {
       data = renderDemoHtml(data.toString());
     }
     res.writeHead(200, { 'Content-Type': types[ext] || 'text/plain' });
@@ -148,6 +152,11 @@ const server = http.createServer(async (req, res) => {
 
   // SECURITY GAP: No Content-Security-Policy, no X-Frame-Options
   // SECURITY GAP: No rate limiting anywhere
+
+  // Standalone fixtures match Vercel's public/ files without banking-mode rendering.
+  if ((method === 'GET' || method === 'HEAD') && ZAPIER_FIXTURES.has(pathname)) {
+    return serveFile(res, path.join(__dirname, 'public/zapier', ZAPIER_FIXTURES.get(pathname)), false);
+  }
 
   // --- Static files ---
   if (pathname.startsWith('/static/')) {

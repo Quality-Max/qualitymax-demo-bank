@@ -33,6 +33,24 @@ Use `npm test` to verify the modes locally.
 See [DEMO_SETUP.md](DEMO_SETUP.md) for the recommended Vercel deployments and
 paste-ready qmax-code demo prompts.
 
+## Zapier quantity demo
+
+Two standalone pages support the Google Sheets → QualityMax demo. After deploying
+this revision, use these URLs on the main demo host:
+
+- Broken: https://qualitymax-demo-bank.vercel.app/zapier/quantity-total.broken.fixture.html
+- Corrected: https://qualitymax-demo-bank.vercel.app/zapier/quantity-total.fixture.html
+
+For local use, run `npm start` and replace the origin with `http://localhost:3000`.
+Change Quantity from `1` to `3`: the broken page stays at `$10.00`; the corrected
+page displays `$30.00`. Use the same testing goal for each URL: “Change quantity
+from 1 to 3 and assert that the total is $30.00.” These pages require no login,
+payment, or backend and behave identically in every `DEMO_MODE`.
+
+`npm test` checks both served pages and their quantity behavior. Vercel serves
+these files directly from `public/zapier/`; the local server allows the same two
+paths. A successful fixture check does not establish AI test or Zap completion.
+
 ## Native Demo Apps
 
 Production-shaped Android and iOS clients mirror the web dashboard, account
